@@ -2288,9 +2288,21 @@ function updateGoalsData() {
         const goalsPage = document.getElementById('goalsPage');
         if (goalsPage) {
             let goalsListHtml = '';
+            let mobileGoalsCardsHtml = '';
             
             if (totalGoals === 0) {
                 goalsListHtml = `
+                    <div class="text-center mt-4">
+                        <i class="fas fa-bullseye fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">ยังไม่มีเป้าหมาย</h5>
+                        <p class="text-muted">เริ่มต้นสร้างเป้าหมายการออมของคุณ</p>
+                        <button class="btn btn-primary" onclick="showGoalModal()">
+                            <i class="fas fa-plus me-1"></i>
+                            สร้างเป้าหมายแรก
+                        </button>
+                    </div>
+                `;
+                mobileGoalsCardsHtml = `
                     <div class="text-center mt-4">
                         <i class="fas fa-bullseye fa-3x text-muted mb-3"></i>
                         <h5 class="text-muted">ยังไม่มีเป้าหมาย</h5>
@@ -2387,6 +2399,84 @@ function updateGoalsData() {
                         }).join('')}
                     </div>
                 `;
+
+                // สร้าง Mobile Cards สำหรับ Goals
+                mobileGoalsCardsHtml = `
+                    <div class="mobile-goals-cards">
+                        ${goals.map(goal => {
+                            const progress = Math.min(100, (goal.currentAmount / goal.targetAmount) * 100);
+                            const progressColor = progress >= 100 ? 'success' : progress >= 75 ? 'info' : progress >= 50 ? 'warning' : 'danger';
+                            const statusBadge = goal.status === 'completed' ? 'badge bg-success' : 'badge bg-primary';
+                            const statusText = goal.status === 'completed' ? 'สำเร็จ' : 'กำลังดำเนินการ';
+                            const daysLeft = Math.ceil((goal.targetDate - new Date()) / (1000 * 60 * 60 * 24));
+                            const categoryNames = {
+                                'travel': 'ท่องเที่ยว',
+                                'vehicle': 'ยานพาหนะ',
+                                'house': 'ที่อยู่อาศัย',
+                                'education': 'การศึกษา',
+                                'emergency': 'เงินฉุกเฉิน',
+                                'investment': 'การลงทุน',
+                                'gadget': 'เครื่องใช้/อุปกรณ์',
+                                'other': 'อื่นๆ'
+                            };
+                            
+                            return `
+                                <div class="goal-card" data-goal-id="${goal.id}">
+                                    <div class="goal-card-header">
+                                        <span class="goal-title">${goal.title}</span>
+                                        <span class="${statusBadge}">${statusText}</span>
+                                    </div>
+                                    <div class="goal-card-body">
+                                        <div class="goal-card-row">
+                                            <span class="goal-card-label">หมวดหมู่:</span>
+                                            <span class="goal-card-value category">${categoryNames[goal.category] || goal.category}</span>
+                                        </div>
+                                        <div class="goal-card-row">
+                                            <span class="goal-card-label">ความคืบหน้า:</span>
+                                            <span class="goal-card-value progress">${progress.toFixed(1)}%</span>
+                                        </div>
+                                        <div class="goal-card-row">
+                                            <span class="goal-card-label">ปัจจุบัน:</span>
+                                            <span class="goal-card-value current-amount">฿${goal.currentAmount.toLocaleString('th-TH')}</span>
+                                        </div>
+                                        <div class="goal-card-row">
+                                            <span class="goal-card-label">เป้าหมาย:</span>
+                                            <span class="goal-card-value target-amount">฿${goal.targetAmount.toLocaleString('th-TH')}</span>
+                                        </div>
+                                        ${goal.description ? `
+                                            <div class="goal-card-row">
+                                                <span class="goal-card-label">รายละเอียด:</span>
+                                                <span class="goal-card-value description">${goal.description}</span>
+                                            </div>
+                                        ` : ''}
+                                        <div class="goal-card-row">
+                                            <span class="goal-card-label">วันที่เป้าหมาย:</span>
+                                            <span class="goal-card-value target-date">${goal.targetDate.toLocaleDateString('th-TH')}</span>
+                                        </div>
+                                        <div class="goal-card-row">
+                                            <span class="goal-card-label">เวลาที่เหลือ:</span>
+                                            <span class="goal-card-value days-left">${daysLeft > 0 ? `${daysLeft} วัน` : 'หมดเวลาแล้ว'}</span>
+                                        </div>
+                                        <div class="goal-card-actions">
+                                            <button class="btn btn-outline-success btn-sm" onclick="updateGoalProgress('${goal.id}', ${goal.currentAmount + 1000})" title="เพิ่ม 1,000 บาท">
+                                                <i class="fas fa-plus"></i> เพิ่ม 1K
+                                            </button>
+                                            <button class="btn btn-outline-info btn-sm" onclick="showUpdateProgressModal('${goal.id}')" title="อัปเดตความคืบหน้า">
+                                                <i class="fas fa-edit"></i> แก้ไข
+                                            </button>
+                                            <button class="btn btn-outline-primary btn-sm" onclick="editGoal('${goal.id}')" title="แก้ไขเป้าหมาย">
+                                                <i class="fas fa-edit"></i> แก้ไข
+                                            </button>
+                                            <button class="btn btn-outline-danger btn-sm" onclick="deleteGoal('${goal.id}')" title="ลบเป้าหมาย">
+                                                <i class="fas fa-trash"></i> ลบ
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
             }
             
             goalsPage.innerHTML = `
@@ -2410,6 +2500,23 @@ function updateGoalsData() {
                                 </div>
                             </div>
                             <div class="card-body">
+                                <!-- Mobile Search Bar for Goals -->
+                                <div class="d-block d-lg-none mobile-search-container">
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-search text-muted"></i>
+                                        </span>
+                                        <input type="text" class="form-control" id="mobileSearchGoalsInput" placeholder="ค้นหาเป้าหมาย...">
+                                        <button class="btn btn-outline-secondary" type="button" id="clearMobileSearchGoals">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <div class="mobile-search-info">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        ค้นหาจากชื่อ, หมวดหมู่, หรือรายละเอียด
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <div class="card bg-white text-primary border-primary shadow-sm">
@@ -2439,12 +2546,24 @@ function updateGoalsData() {
                                         </div>
                                     </div>
                                 </div>
-                                ${goalsListHtml}
+                                
+                                <!-- Desktop Goals List -->
+                                <div class="d-none d-lg-block">
+                                    ${goalsListHtml}
+                                </div>
+                                
+                                <!-- Mobile Goals Cards -->
+                                <div class="d-block d-lg-none">
+                                    ${mobileGoalsCardsHtml}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             `;
+
+            // ตั้งค่า Mobile Search Event Listeners สำหรับ Goals
+            setupMobileGoalsSearchListeners();
         }
         
     } catch (error) {
@@ -3437,6 +3556,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // ตั้งค่า Event Listeners สำหรับ Dropdown
     setupDropdownListeners();
     
+    // ตั้งค่า Mobile Search Event Listeners
+    setupMobileSearchListeners();
+    
     // รอให้ Firebase พร้อมใช้งาน
     setTimeout(() => {
         initDashboard();
@@ -3457,6 +3579,191 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 250);
     });
 });
+
+// ฟังก์ชันสำหรับตั้งค่า Mobile Search Event Listeners
+function setupMobileSearchListeners() {
+    // Mobile Search สำหรับ Dashboard
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
+    const clearMobileSearch = document.getElementById('clearMobileSearch');
+    
+    if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('input', function() {
+            filterMobileCards(this.value, 'dashboard');
+        });
+        
+        mobileSearchInput.addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                this.blur();
+            }
+        });
+    }
+    
+    if (clearMobileSearch) {
+        clearMobileSearch.addEventListener('click', function() {
+            mobileSearchInput.value = '';
+            filterMobileCards('', 'dashboard');
+            mobileSearchInput.focus();
+        });
+    }
+    
+    // Mobile Search สำหรับ Transactions Page
+    const mobileSearchInputPage = document.getElementById('mobileSearchInputPage');
+    const clearMobileSearchPage = document.getElementById('clearMobileSearchPage');
+    
+    if (mobileSearchInputPage) {
+        mobileSearchInputPage.addEventListener('input', function() {
+            filterMobileCards(this.value, 'transactions');
+        });
+        
+        mobileSearchInputPage.addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                this.blur();
+            }
+        });
+    }
+    
+    if (clearMobileSearchPage) {
+        clearMobileSearchPage.addEventListener('click', function() {
+            mobileSearchInputPage.value = '';
+            filterMobileCards('', 'transactions');
+            mobileSearchInputPage.focus();
+        });
+    }
+}
+
+// ฟังก์ชันสำหรับกรอง Mobile Cards
+function filterMobileCards(searchTerm, page) {
+    const searchLower = searchTerm.toLowerCase().trim();
+    const container = page === 'dashboard' ? 
+        document.querySelector('.mobile-table-cards') : 
+        document.querySelector('.mobile-table-cards-page');
+    
+    if (!container) return;
+    
+    const cards = container.querySelectorAll('.table-card');
+    let visibleCount = 0;
+    
+    cards.forEach(card => {
+        const category = card.querySelector('.category')?.textContent || '';
+        const description = card.querySelector('.description')?.textContent || '';
+        const amount = card.querySelector('.amount')?.textContent || '';
+        
+        const searchableText = `${category} ${description} ${amount}`.toLowerCase();
+        const isVisible = searchTerm === '' || searchableText.includes(searchLower);
+        
+        card.style.display = isVisible ? 'block' : 'none';
+        if (isVisible) visibleCount++;
+    });
+    
+    // แสดงผลการค้นหา
+    showMobileSearchResults(visibleCount, cards.length, page);
+}
+
+// ฟังก์ชันสำหรับแสดงผลการค้นหา
+function showMobileSearchResults(visible, total, page) {
+    const searchInput = page === 'dashboard' ? 
+        document.getElementById('mobileSearchInput') : 
+        document.getElementById('mobileSearchInputPage');
+    
+    if (!searchInput) return;
+    
+    const searchInfo = searchInput.parentElement.nextElementSibling;
+    if (searchInfo) {
+        if (searchInput.value.trim() !== '') {
+            searchInfo.innerHTML = `
+                <small class="text-muted">
+                    <i class="fas fa-search me-1"></i>
+                    พบ ${visible} รายการจากทั้งหมด ${total} รายการ
+                </small>
+            `;
+        } else {
+            searchInfo.innerHTML = `
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    ค้นหาจากหมวดหมู่, รายละเอียด, หรือจำนวนเงิน
+                </small>
+            `;
+        }
+    }
+}
+
+// ฟังก์ชันสำหรับตั้งค่า Mobile Search Event Listeners สำหรับ Goals
+function setupMobileGoalsSearchListeners() {
+    const mobileSearchGoalsInput = document.getElementById('mobileSearchGoalsInput');
+    const clearMobileSearchGoals = document.getElementById('clearMobileSearchGoals');
+
+    if (mobileSearchGoalsInput) {
+        mobileSearchGoalsInput.addEventListener('input', function() {
+            filterMobileGoalsCards(this.value);
+        });
+        
+        mobileSearchGoalsInput.addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                this.blur();
+            }
+        });
+    }
+
+    if (clearMobileSearchGoals) {
+        clearMobileSearchGoals.addEventListener('click', function() {
+            mobileSearchGoalsInput.value = '';
+            filterMobileGoalsCards('');
+            mobileSearchGoalsInput.focus();
+        });
+    }
+}
+
+// ฟังก์ชันสำหรับกรอง Mobile Goals Cards
+function filterMobileGoalsCards(searchTerm) {
+    const searchLower = searchTerm.toLowerCase().trim();
+    const container = document.querySelector('.mobile-goals-cards');
+    
+    if (!container) return;
+    
+    const cards = container.querySelectorAll('.goal-card');
+    let visibleCount = 0;
+    
+    cards.forEach(card => {
+        const title = card.querySelector('.goal-title')?.textContent || '';
+        const category = card.querySelector('.category')?.textContent || '';
+        const description = card.querySelector('.description')?.textContent || '';
+        
+        const searchableText = `${title} ${category} ${description}`.toLowerCase();
+        const isVisible = searchTerm === '' || searchableText.includes(searchLower);
+        
+        card.style.display = isVisible ? 'block' : 'none';
+        if (isVisible) visibleCount++;
+    });
+    
+    // แสดงผลการค้นหา
+    showMobileGoalsSearchResults(visibleCount, cards.length);
+}
+
+// ฟังก์ชันสำหรับแสดงผลการค้นหา Goals
+function showMobileGoalsSearchResults(visible, total) {
+    const searchInput = document.getElementById('mobileSearchGoalsInput');
+    
+    if (!searchInput) return;
+    
+    const searchInfo = searchInput.parentElement.nextElementSibling;
+    if (searchInfo) {
+        if (searchInput.value.trim() !== '') {
+            searchInfo.innerHTML = `
+                <small class="text-muted">
+                    <i class="fas fa-search me-1"></i>
+                    พบ ${visible} เป้าหมายจากทั้งหมด ${total} เป้าหมาย
+                </small>
+            `;
+        } else {
+            searchInfo.innerHTML = `
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    ค้นหาจากชื่อ, หมวดหมู่, หรือรายละเอียด
+                </small>
+            `;
+        }
+    }
+}
 
 // ฟังก์ชันสำหรับสร้าง Mobile Card Layout สำหรับหน้า Transactions
 function createMobileTableCardsPage() {

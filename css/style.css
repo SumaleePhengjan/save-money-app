@@ -1000,6 +1000,127 @@ body {
         color: var(--dark);
         text-align: left;
     }
+}
+
+/* ===== Mobile Goals Cards ===== */
+.mobile-goals-cards .goal-card {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.mobile-goals-cards .goal-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.mobile-goals-cards .goal-card-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    padding: 1rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mobile-goals-cards .goal-card-header .goal-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.mobile-goals-cards .goal-card-header .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.mobile-goals-cards .goal-card-body {
+    padding: 1rem;
+}
+
+.mobile-goals-cards .goal-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.mobile-goals-cards .goal-card-row:last-child {
+    border-bottom: none;
+}
+
+.mobile-goals-cards .goal-card-label {
+    font-weight: 600;
+    color: var(--gray-medium);
+    min-width: 100px;
+    font-size: 0.9rem;
+}
+
+.mobile-goals-cards .goal-card-value {
+    text-align: right;
+    font-weight: 500;
+    flex: 1;
+    margin-left: 1rem;
+    word-break: break-word;
+}
+
+.mobile-goals-cards .goal-card-value.category {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.mobile-goals-cards .goal-card-value.progress {
+    font-weight: 700;
+    color: var(--info);
+}
+
+.mobile-goals-cards .goal-card-value.current-amount {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.mobile-goals-cards .goal-card-value.target-amount {
+    font-weight: 700;
+    color: var(--success);
+}
+
+.mobile-goals-cards .goal-card-value.description {
+    font-style: italic;
+    color: var(--dark);
+    text-align: left;
+}
+
+.mobile-goals-cards .goal-card-value.target-date {
+    font-size: 0.85rem;
+    color: var(--gray-medium);
+}
+
+.mobile-goals-cards .goal-card-value.days-left {
+    font-weight: 600;
+    color: var(--warning);
+}
+
+.mobile-goals-cards .goal-card-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f3f4;
+    flex-wrap: wrap;
+}
+
+.mobile-goals-cards .goal-card-actions .btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    border-radius: 0.5rem;
+    white-space: nowrap;
+}
     
     /* No data card */
     .mobile-table-cards .table-card .text-center {
@@ -1292,6 +1413,137 @@ body {
 
 .fade-in {
     animation: fadeIn 0.5s ease-in-out;
+}
+
+/* ===== Mobile Search Styles ===== */
+.mobile-search-container {
+    background: var(--light);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+}
+
+.mobile-search-container .input-group {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.mobile-search-container .form-control {
+    border: none;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+}
+
+.mobile-search-container .form-control:focus {
+    box-shadow: none;
+    border-color: var(--primary);
+}
+
+.mobile-search-container .input-group-text {
+    background: var(--light);
+    border: none;
+    color: var(--muted);
+}
+
+.mobile-search-container .btn {
+    border: none;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.mobile-search-container .btn:hover {
+    background: var(--danger);
+    color: white;
+}
+
+.mobile-search-info {
+    font-size: 0.875rem;
+    color: var(--muted);
+    margin-top: 0.5rem;
+}
+
+.mobile-search-info i {
+    color: var(--primary);
+}
+
+/* ===== Enhanced Mobile Table Cards ===== */
+.table-card {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.table-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.table-card-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+}
+
+.table-card-body {
+    padding: 1rem;
+}
+
+.table-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table-card-row:last-child {
+    border-bottom: none;
+}
+
+.table-card-label {
+    font-weight: 600;
+    color: var(--dark);
+    min-width: 80px;
+}
+
+.table-card-value {
+    text-align: right;
+    flex: 1;
+    margin-left: 1rem;
+}
+
+.table-card-value.amount.income {
+    color: var(--success);
+    font-weight: 700;
+}
+
+.table-card-value.amount.expense {
+    color: var(--danger);
+    font-weight: 700;
+}
+
+.table-card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.table-card-actions .btn {
+    flex: 1;
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
 }
 
 /* ===== Custom Scrollbar ===== */

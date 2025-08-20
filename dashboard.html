@@ -258,6 +258,23 @@
                             </div>
                         </div>
                         <div class="card-body">
+                            <!-- Mobile Search Bar -->
+                            <div class="d-block d-lg-none mobile-search-container">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-search text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="mobileSearchInput" placeholder="ค้นหารายการ...">
+                                    <button class="btn btn-outline-secondary" type="button" id="clearMobileSearch">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="mobile-search-info">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    ค้นหาจากหมวดหมู่, รายละเอียด, หรือจำนวนเงิน
+                                </div>
+                            </div>
+                            
                             <div class="table-responsive">
                                 <table id="transactionsTable" class="table table-striped table-hover">
                                     <thead>
@@ -315,6 +332,23 @@
                             </div>
                         </div>
                         <div class="card-body">
+                            <!-- Mobile Search Bar for Transactions Page -->
+                            <div class="d-block d-lg-none mobile-search-container">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-search text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="mobileSearchInputPage" placeholder="ค้นหารายการ...">
+                                    <button class="btn btn-outline-secondary" type="button" id="clearMobileSearchPage">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="mobile-search-info">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    ค้นหาจากหมวดหมู่, รายละเอียด, หรือจำนวนเงิน
+                                </div>
+                            </div>
+                            
                             <div class="table-responsive">
                                 <table id="transactionsTablePage" class="table table-striped table-hover">
                                     <thead>
