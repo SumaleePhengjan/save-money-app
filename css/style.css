@@ -136,6 +136,13 @@ body {
     background: linear-gradient(135deg,  rgba(235, 111, 235, 0.9) 50%, 100%);
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-content {
+    display: block;
 }
 
 .login-bg::before {
@@ -773,10 +780,72 @@ body {
     
     .login-content {
         padding: 2rem;
+        text-align: center;
+    }
+    
+    .login-content h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .login-content p {
+        font-size: 1rem;
+        line-height: 1.4;
     }
     
     .card-body {
         padding: 1rem;
+    }
+    
+    /* ปรับ layout สำหรับมือถือ */
+    .row.min-vh-100 {
+        flex-direction: column;
+    }
+    
+    .col-lg-6.login-bg {
+        order: 2;
+        min-height: 200px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .col-lg-6:not(.login-bg) {
+        order: 1;
+        padding: 1rem;
+    }
+    
+    /* แสดงข้อความในมือถือ */
+    .login-bg {
+        display: flex !important;
+    }
+    
+    .login-content {
+        display: block !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .login-content h1 {
+        font-size: 1.25rem;
+    }
+    
+    .login-content p {
+        font-size: 0.9rem;
+    }
+    
+    .col-lg-6.login-bg {
+        min-height: 150px;
+        display: flex !important;
+    }
+    
+    .login-content {
+        display: block !important;
+    }
+    
+    /* แสดงข้อความในหน้าจอเล็ก */
+    .login-bg {
+        display: flex !important;
     }
 }
 
