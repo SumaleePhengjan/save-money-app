@@ -461,6 +461,15 @@ async function navigateToPage(page) {
         dropdown.hide();
     }
     
+    // ยุบ navbar ในหน้าจอขนาดเล็ก (มือถือ/tablet)
+    if (window.innerWidth < 992) { // Bootstrap lg breakpoint
+        const navbarCollapse = document.getElementById('navbarNav');
+        if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+            const bsCollapse = bootstrap.Collapse.getOrCreateInstance(navbarCollapse);
+            bsCollapse.hide();
+        }
+    }
+    
     // ซ่อนทุกหน้า
     document.querySelectorAll('.page-content').forEach(content => {
         content.style.display = 'none';
@@ -2376,9 +2385,9 @@ function updateGoalsData() {
                                                 <div class="col-6">
                                                     <small class="text-muted">เป้าหมาย</small>
                                                     <div class="fw-bold text-success">฿${goal.targetAmount.toLocaleString('th-TH')}</div>
-                                                    <button class="btn btn-outline-info btn-sm mt-1" onclick="showUpdateProgressModal('${goal.id}')" title="อัปเดตความคืบหน้า">
-                                                        <i class="fas fa-edit"></i> แก้ไข
-                                                    </button>
+                                                                                                <button class="btn btn-outline-info btn-sm mt-1" onclick="showUpdateProgressModal('${goal.id}')" title="อัปเดตความคืบหน้า">
+                                                <i class="fas fa-edit"></i> อัพเดท
+                                            </button>
                                                 </div>
                                             </div>
                                             ${goal.description ? `
@@ -2462,7 +2471,7 @@ function updateGoalsData() {
                                                 <i class="fas fa-plus"></i> เพิ่ม 1K
                                             </button>
                                             <button class="btn btn-outline-info btn-sm" onclick="showUpdateProgressModal('${goal.id}')" title="อัปเดตความคืบหน้า">
-                                                <i class="fas fa-edit"></i> แก้ไข
+                                                <i class="fas fa-edit"></i> อัพเดท
                                             </button>
                                             <button class="btn btn-outline-primary btn-sm" onclick="editGoal('${goal.id}')" title="แก้ไขเป้าหมาย">
                                                 <i class="fas fa-edit"></i> แก้ไข
