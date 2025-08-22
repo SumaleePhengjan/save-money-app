@@ -49,6 +49,23 @@ async function initDashboard() {
         updateDashboardStats();
         loadRecentTransactions();
         
+        // ใช้การตั้งค่าที่บันทึกไว้
+        const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+        applySettings(userSettings);
+        
+        // ตั้งค่า session timeout
+        if (userSettings.sessionTimeout) {
+            applySessionTimeout(parseInt(userSettings.sessionTimeout));
+        }
+        
+        // ตั้งค่า compact view
+        if (userSettings.compactView) {
+            applyCompactView(userSettings.compactView);
+        }
+        
+        // ตั้งค่า session timer listeners
+        setupSessionTimerListeners();
+        
         // เริ่มต้นหน้า Dashboard สำเร็จ
         
     } catch (error) {
@@ -1015,9 +1032,10 @@ function loadSettingsPage() {
             </div>
         `;
         
-        // ตั้งค่า Event Listeners สำหรับการแจ้งเตือน
+        // ตั้งค่า Event Listeners สำหรับการแจ้งเตือนและการตั้งค่าต่างๆ
         setTimeout(() => {
             setupNotificationListeners();
+            setupSettingsListeners();
         }, 100);
     }
 }
@@ -1260,6 +1278,12 @@ function createMobileTableCards() {
         
         // เพิ่ม mobile cards ลงใน container
         tableContainer.appendChild(mobileCardsContainer);
+        
+        // ใช้ compact view ถ้าตั้งค่าไว้
+        const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+        if (userSettings.compactView) {
+            applyCompactView(true);
+        }
         
     } catch (error) {
         console.error('เกิดข้อผิดพลาดในการสร้าง Mobile Cards:', error);
@@ -1811,6 +1835,12 @@ function updateDashboardStats() {
     if (activeGoalsElement) {
         activeGoalsElement.textContent = activeGoals;
     }
+    
+    // ใช้ compact view ถ้าตั้งค่าไว้
+    const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+    if (userSettings.compactView) {
+        applyCompactView(true);
+    }
 }
 
 // ฟังก์ชันสำหรับการโหลดรายการล่าสุด
@@ -1853,6 +1883,12 @@ function loadRecentTransactions() {
                 </div>
             `;
         }).join('');
+    }
+    
+    // ใช้ compact view ถ้าตั้งค่าไว้
+    const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+    if (userSettings.compactView) {
+        applyCompactView(true);
     }
 }
 
@@ -1909,6 +1945,12 @@ function showTransactionModal(transactionId = null) {
     
     // แสดง Modal
     modal.show();
+    
+    // ใช้ compact view ถ้าตั้งค่าไว้
+    const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+    if (userSettings.compactView) {
+        applyCompactView(true);
+    }
 }
 
 // ฟังก์ชันสำหรับการกรอกข้อมูลในฟอร์มแก้ไขรายการ
@@ -2058,6 +2100,12 @@ function refreshDashboard() {
     // อัปเดตสถิติและรายการล่าสุด
     updateDashboardStats();
     loadRecentTransactions();
+    
+    // ใช้ compact view ถ้าตั้งค่าไว้
+    const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+    if (userSettings.compactView) {
+        applyCompactView(true);
+    }
 }
 
 // ฟังก์ชันสำหรับการอัปเดตข้อมูลรายงาน
@@ -3167,6 +3215,12 @@ function exportDataAsExcel() {
 // ฟังก์ชันสำหรับการแก้ไขรายการ (Global)
 window.editTransaction = function(transactionId) {
     showTransactionModal(transactionId);
+    
+    // ใช้ compact view ถ้าตั้งค่าไว้
+    const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+    if (userSettings.compactView) {
+        applyCompactView(true);
+    }
 };
 
 // ฟังก์ชันสำหรับการแสดง Modal เพิ่มเป้าหมาย (Global)
@@ -3188,6 +3242,12 @@ window.showGoalModal = function() {
     
     // แสดง Modal และจัดการ accessibility
     modal.show();
+    
+    // ใช้ compact view ถ้าตั้งค่าไว้
+    const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+    if (userSettings.compactView) {
+        applyCompactView(true);
+    }
     
     // จัดการ focus เมื่อ Modal เปิด
     modalElement.addEventListener('shown.bs.modal', function () {
@@ -3215,6 +3275,12 @@ window.deleteTransaction = async function(transactionId) {
             refreshDashboard();
             
             showNotification('ลบรายการสำเร็จ', 'success');
+            
+            // ใช้ compact view ถ้าตั้งค่าไว้
+            const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+            if (userSettings.compactView) {
+                applyCompactView(true);
+            }
             
         } catch (error) {
             console.error('ข้อผิดพลาดในการลบรายการ:', error);
@@ -3412,6 +3478,139 @@ function setupNotificationListeners() {
     }
 }
 
+// เพิ่ม Event Listeners สำหรับการตั้งค่าต่างๆ
+function setupSettingsListeners() {
+    // Event listener สำหรับ compactView
+    const compactView = document.getElementById('compactView');
+    if (compactView) {
+        compactView.addEventListener('change', function() {
+            // บันทึกการตั้งค่าทันทีเมื่อมีการเปลี่ยนแปลง
+            const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+            userSettings.compactView = this.checked;
+            localStorage.setItem('userSettings', JSON.stringify(userSettings));
+            
+            // ใช้การตั้งค่าใหม่
+            applyCompactView(this.checked);
+            
+            showNotification('บันทึกการตั้งค่าสำเร็จ', 'success');
+        });
+    }
+    
+    // Event listener สำหรับ sessionTimeout
+    const sessionTimeout = document.getElementById('sessionTimeout');
+    if (sessionTimeout) {
+        sessionTimeout.addEventListener('change', function() {
+            // บันทึกการตั้งค่าทันทีเมื่อมีการเปลี่ยนแปลง
+            const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+            userSettings.sessionTimeout = this.value;
+            localStorage.setItem('userSettings', JSON.stringify(userSettings));
+            
+            // ใช้การตั้งค่าใหม่
+            applySessionTimeout(parseInt(this.value));
+            
+            showNotification('บันทึกการตั้งค่าสำเร็จ', 'success');
+        });
+    }
+}
+
+// ฟังก์ชันสำหรับการใช้ compactView
+function applyCompactView(isCompact) {
+    // ใช้กับ DataTable
+    const dataTable = document.querySelector('#transactionsTable');
+    if (dataTable) {
+        if (isCompact) {
+            dataTable.classList.add('compact-view');
+        } else {
+            dataTable.classList.remove('compact-view');
+        }
+    }
+    
+    // ใช้กับ mobile cards
+    const mobileCards = document.querySelectorAll('.mobile-table-cards, .mobile-table-cards-page');
+    mobileCards.forEach(container => {
+        if (isCompact) {
+            container.classList.add('compact-view');
+        } else {
+            container.classList.remove('compact-view');
+        }
+    });
+    
+    // ใช้กับการ์ดทั่วไป
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        if (isCompact) {
+            card.classList.add('compact-view');
+        } else {
+            card.classList.remove('compact-view');
+        }
+    });
+    
+    // ใช้กับปุ่มต่างๆ
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        if (isCompact) {
+            button.classList.add('compact-view');
+        } else {
+            button.classList.remove('compact-view');
+        }
+    });
+    
+    // ใช้กับ form controls
+    const formControls = document.querySelectorAll('.form-control, .form-select');
+    formControls.forEach(control => {
+        if (isCompact) {
+            control.classList.add('compact-view');
+        } else {
+            control.classList.remove('compact-view');
+        }
+    });
+}
+
+// ฟังก์ชันสำหรับการใช้ sessionTimeout
+function applySessionTimeout(timeoutMinutes) {
+    // ล้าง timer เดิม (ถ้ามี)
+    if (window.sessionTimer) {
+        clearTimeout(window.sessionTimer);
+    }
+    
+    // ตั้ง timer ใหม่
+    if (timeoutMinutes > 0) {
+        window.sessionTimer = setTimeout(() => {
+            // ออกจากระบบเมื่อหมดเวลา
+            if (confirm('เซสชันหมดเวลาแล้ว คุณต้องการเข้าสู่ระบบใหม่หรือไม่?')) {
+                auth.signOut().then(() => {
+                    window.location.href = 'index.html';
+                });
+            }
+        }, timeoutMinutes * 60 * 1000); // แปลงนาทีเป็นมิลลิวินาที
+    }
+}
+
+// ฟังก์ชันสำหรับรีเซ็ต session timer
+function resetSessionTimer() {
+    const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+    const timeoutMinutes = parseInt(userSettings.sessionTimeout) || 30;
+    
+    if (timeoutMinutes > 0) {
+        applySessionTimeout(timeoutMinutes);
+    }
+}
+
+// เพิ่ม event listeners สำหรับรีเซ็ต session timer
+function setupSessionTimerListeners() {
+    // รีเซ็ต timer เมื่อมีการคลิก
+    document.addEventListener('click', resetSessionTimer);
+    
+    // รีเซ็ต timer เมื่อมีการพิมพ์
+    document.addEventListener('keydown', resetSessionTimer);
+    
+    // รีเซ็ต timer เมื่อมีการเลื่อน
+    document.addEventListener('scroll', resetSessionTimer);
+    
+    // รีเซ็ต timer เมื่อมีการเปลี่ยนแท็บ
+    document.addEventListener('visibilitychange', resetSessionTimer);
+}
+
 // ฟังก์ชันสำหรับการรีเซ็ตการตั้งค่า
 window.resetSettings = function() {
     if (confirm('คุณต้องการรีเซ็ตการตั้งค่าทั้งหมดหรือไม่?')) {
@@ -3429,6 +3628,16 @@ function applySettings(settings) {
             (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : 
             settings.theme
         );
+    }
+    
+    // ใช้ compact view
+    if (settings.compactView !== undefined) {
+        applyCompactView(settings.compactView);
+    }
+    
+    // ใช้ session timeout
+    if (settings.sessionTimeout) {
+        applySessionTimeout(parseInt(settings.sessionTimeout));
     }
 }
 
@@ -3881,6 +4090,12 @@ function createMobileTableCardsPage() {
         // เพิ่ม mobile cards ลงใน container
         tableContainer.appendChild(mobileCardsContainer);
         
+        // ใช้ compact view ถ้าตั้งค่าไว้
+        const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+        if (userSettings.compactView) {
+            applyCompactView(true);
+        }
+        
     } catch (error) {
         console.error('เกิดข้อผิดพลาดในการสร้าง Mobile Cards หน้า Transactions:', error);
     }
@@ -3926,6 +4141,12 @@ function changeMobilePage(direction, totalPages, transactions, mobileCardsContai
             // ลบ fade-in class หลังจาก animation เสร็จ
             setTimeout(() => {
                 currentPageElement.classList.remove('fade-in');
+                
+                // ใช้ compact view ถ้าตั้งค่าไว้
+                const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+                if (userSettings.compactView) {
+                    applyCompactView(true);
+                }
             }, 300);
         }, 150);
         

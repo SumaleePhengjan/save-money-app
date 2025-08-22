@@ -1,9 +1,5 @@
 /* ===== Performance Optimizations ===== */
-/* Optimize font loading */
-@font-face {
-    font-family: 'Noto Sans Thai';
-    font-display: swap;
-}
+/* Font is loaded via HTML link tags for better performance */
 
 /* Reduce layout shift */
 * {
@@ -1121,7 +1117,9 @@ body {
     border-radius: 0.5rem;
     white-space: nowrap;
 }
-    
+
+/* Media query styles for mobile table cards */
+@media (max-width: 768px) {
     /* No data card */
     .mobile-table-cards .table-card .text-center {
         padding: 2rem 1rem;
@@ -1583,4 +1581,76 @@ body {
         box-shadow: none !important;
         border: 1px solid #ddd !important;
     }
+}
+
+/* ===== Compact View Styles ===== */
+.compact-view {
+    /* ลดขนาด padding และ margin */
+    padding: 0.5rem !important;
+    margin: 0.25rem 0 !important;
+}
+
+.compact-view .transaction-row {
+    /* ลดขนาดแถวในตาราง */
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.875rem !important;
+}
+
+.compact-view .transaction-card {
+    /* ลดขนาดการ์ด */
+    padding: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.compact-view .transaction-card .card-body {
+    padding: 0.5rem !important;
+}
+
+.compact-view .btn {
+    /* ลดขนาดปุ่ม */
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.75rem !important;
+}
+
+.compact-view .badge {
+    /* ลดขนาด badge */
+    font-size: 0.75rem !important;
+    padding: 0.25rem 0.5rem !important;
+}
+
+.compact-view .form-control,
+.compact-view .form-select {
+    /* ลดขนาด input fields */
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.875rem !important;
+}
+
+.compact-view .card {
+    /* ลดขนาดการ์ดทั่วไป */
+    margin-bottom: 0.5rem !important;
+}
+
+.compact-view .card-body {
+    padding: 0.75rem !important;
+}
+
+.compact-view .table {
+    /* ลดขนาดตาราง */
+    font-size: 0.875rem !important;
+}
+
+.compact-view .table th,
+.compact-view .table td {
+    padding: 0.25rem 0.5rem !important;
+}
+
+/* ===== Mobile Cards Animation ===== */
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.15s ease-out;
+}
+
+.fade-in {
+    opacity: 1;
+    transition: opacity 0.3s ease-in;
 }
