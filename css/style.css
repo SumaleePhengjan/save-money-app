@@ -124,12 +124,12 @@ body {
 
 /* ===== หน้า Login ===== */
 .login-page {
-    background: linear-gradient(135deg,  #e693bc 100%);
+    background: linear-gradient(135deg, #ffe6f2 0%, #fff5f8 50%, #ffffff 100%);
     min-height: 100vh;
 }
 
 .login-bg {
-    background: linear-gradient(135deg,  rgba(235, 111, 235, 0.9) 50%, 100%);
+    background: linear-gradient(135deg, #ffb6c1 0%, #ffc0cb 50%, #ffe4e1 100%);
     position: relative;
     overflow: hidden;
     display: flex;
@@ -156,22 +156,152 @@ body {
     position: relative;
     z-index: 2;
     padding: 3rem;
-    color: white;
+    color: #2c3e50;
+}
+
+.login-content h1 {
+    color: #2c3e50;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+    font-weight: 700;
+}
+
+.login-content p {
+    color: #4a5568;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+/* Override text-white classes in login content for better contrast */
+.login-content .text-white {
+    color: #2c3e50 !important;
+}
+
+.login-content .text-white-50 {
+    color: #4a5568 !important;
 }
 
 .login-form-container {
-    background: var(--bg-white);
+    background: linear-gradient(135deg, #ffffff 0%, #fff8fa 100%);
     padding: 3rem;
     border-radius: 1rem;
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 20px 40px rgba(255, 105, 180, 0.15);
     max-width: 400px;
     width: 100%;
+    border: 1px solid rgba(255, 105, 180, 0.1);
+}
+
+.login-form-container h2 {
+    color: #ff69b4;
+}
+
+.login-form-container .text-muted {
+    color: #a0522d !important;
+}
+
+/* ปรับแต่ง input fields */
+.login-form-container .form-control {
+    border-color: rgba(255, 105, 180, 0.2);
+    transition: all 0.3s ease;
+}
+
+.login-form-container .form-control:focus {
+    border-color: #ff69b4;
+    box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.25);
+}
+
+.login-form-container .input-group-text {
+    background-color: rgba(255, 105, 180, 0.1);
+    border-color: rgba(255, 105, 180, 0.2);
+    color: #ff69b4;
+}
+
+/* ปรับแต่ง links */
+.login-form-container a {
+    color: #ff69b4;
+    transition: all 0.3s ease;
+}
+
+.login-form-container a:hover {
+    color: #ff1493;
+    text-decoration: none;
+}
+
+/* ปรับแต่ง checkbox */
+.login-form-container .form-check-input:checked {
+    background-color: #ff69b4;
+    border-color: #ff69b4;
+}
+
+.login-form-container .form-check-input:focus {
+    border-color: #ff69b4;
+    box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.25);
+}
+
+/* ปุ่มสำหรับการเพิ่มข้อมูล - ใช้สีเขียวเพื่อสื่อความหมาย */
+#addNewTransactionBtn,
+#addTransactionFromPageBtn,
+#addGoalBtn,
+.btn-add-new,
+.btn[onclick*="showAddForm"],
+.btn[onclick*="addNew"],
+.btn[onclick*="showGoalModal"] {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+    border-color: #28a745 !important;
+    color: white !important;
+}
+
+#addNewTransactionBtn:hover,
+#addTransactionFromPageBtn:hover,
+#addGoalBtn:hover,
+.btn-add-new:hover,
+.btn[onclick*="showAddForm"]:hover,
+.btn[onclick*="addNew"]:hover,
+.btn[onclick*="showGoalModal"]:hover {
+    background: linear-gradient(135deg, #218838 0%, #1ea080 100%) !important;
+    border-color: #1e7e34 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3) !important;
+}
+
+/* ปุ่มสำหรับการลบ - ใช้สีแดงเพื่อสื่อความหมาย */
+.btn-danger,
+.btn[onclick*="delete"],
+.btn[onclick*="remove"] {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+    border-color: #dc3545 !important;
+    color: white !important;
+}
+
+.btn-danger:hover,
+.btn[onclick*="delete"]:hover,
+.btn[onclick*="remove"]:hover {
+    background: linear-gradient(135deg, #c82333 0%, #a02622 100%) !important;
+    border-color: #bd2130 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3) !important;
+}
+
+/* ปุ่มสำหรับการแก้ไข - ใช้สีส้มเพื่อสื่อความหมาย */
+.btn-warning,
+.btn[onclick*="edit"],
+.btn[onclick*="update"] {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%) !important;
+    border-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.btn-warning:hover,
+.btn[onclick*="edit"]:hover,
+.btn[onclick*="update"]:hover {
+    background: linear-gradient(135deg, #e0a800 0%, #d39e00 100%) !important;
+    border-color: #d39e00 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3) !important;
 }
 
 /* ===== ปุ่มหลัก ===== */
 .btn-primary {
-    background-color: var(--primary);
-    border-color: var(--primary);
+    background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+    border-color: #ff69b4;
     transition: all 0.3s ease;
 }
 
@@ -188,19 +318,20 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: var(--primary-dark);
-    border-color: var(--primary-dark);
+    background: linear-gradient(135deg, #ff1493 0%, #c71585 100%);
+    border-color: #ff1493;
     transform: translateY(-2px);
-    box-shadow: var(--shadow);
+    box-shadow: 0 8px 25px rgba(255, 105, 180, 0.3);
 }
 
 .btn-outline-primary {
-    color: var(--primary);
-    border-color: var(--primary);
+    color: #ff69b4;
+    border-color: #ff69b4;
 }
 
 .btn-outline-primary:hover {
-    background-color: var(--primary);
+    background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+    border-color: #ff69b4;
 }
 
 /* ===== สไตล์สำหรับตัวเลือกเดือนในกราฟ ===== */
